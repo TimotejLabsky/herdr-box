@@ -10,6 +10,10 @@ KbdInteractiveAuthentication no
 PubkeyAuthentication yes
 AllowUsers dev
 
+# Required for pam_env to read /etc/environment — without it OpenSSH defaults
+# to UsePAM no and non-login sessions (`ssh box 'cmd'`) get no token.
+UsePAM yes
+
 X11Forwarding no
 PrintMotd no
 AcceptEnv LANG LC_*
