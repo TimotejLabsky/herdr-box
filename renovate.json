@@ -1,0 +1,42 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^Dockerfile$/"],
+      "matchStrings": ["ARG CLAUDE_CODE_VERSION=(?<currentValue>.+)"],
+      "depNameTemplate": "@anthropic-ai/claude-code",
+      "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^Dockerfile$/"],
+      "matchStrings": ["ARG CODEX_VERSION=(?<currentValue>.+)"],
+      "depNameTemplate": "@openai/codex",
+      "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^Dockerfile$/"],
+      "matchStrings": ["ARG OPENCODE_VERSION=(?<currentValue>.+)"],
+      "depNameTemplate": "opencode-ai",
+      "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^Dockerfile$/"],
+      "matchStrings": ["ARG HERDR_VERSION=(?<currentValue>.+)"],
+      "depNameTemplate": "herdrdev/herdr",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+)$"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^Dockerfile$/"],
+      "matchStrings": ["ARG NODE_VERSION=(?<currentValue>.+)"],
+      "depNameTemplate": "node",
+      "datasourceTemplate": "node-version"
+    }
+  ]
+}

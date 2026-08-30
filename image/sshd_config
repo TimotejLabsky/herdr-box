@@ -1,0 +1,21 @@
+# herdr-box sshd — key-only auth, single user, persistent host keys
+Port 22
+
+HostKey /etc/ssh/hostkeys/ssh_host_ed25519_key
+HostKey /etc/ssh/hostkeys/ssh_host_rsa_key
+
+PermitRootLogin no
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PubkeyAuthentication yes
+AllowUsers dev
+
+X11Forwarding no
+PrintMotd no
+AcceptEnv LANG LC_*
+
+# Keep idle herdr sessions alive through NAT/WireGuard
+ClientAliveInterval 60
+ClientAliveCountMax 10
+
+Subsystem sftp internal-sftp
