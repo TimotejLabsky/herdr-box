@@ -22,6 +22,25 @@ if [ ! -e "$HOME_DIR/.profile" ]; then
 fi
 chown dev:dev "$HOME_DIR"
 
+# 2b. Claude Code runs its first-run wizard (theme + an OAuth login screen)
+#     unless onboarding is already marked complete — it never reaches
+#     CLAUDE_CODE_OAUTH_TOKEN otherwise. Merge the flags in without touching
+#     anything else the file already holds.
+python3 - <<'PY'
+import json, os, pathlib
+p = pathlib.Path("/home/dev/.claude.json")
+try:
+    d = json.loads(p.read_text()) if p.exists() else {}
+except ValueError:
+    d = {}
+if not d.get("hasCompletedOnboarding"):
+    d.update({"hasCompletedOnboarding": True, "theme": "dark",
+              "lastOnboardingVersion": os.environ.get("CLAUDE_CODE_VERSION", "2.1.251")})
+    p.write_text(json.dumps(d, indent=2))
+    os.chown(p, 1000, 1000)
+    p.chmod(0o600)
+PY
+
 # 3. authorized_keys come from the mounted ConfigMap — declarative, replaced
 #    on every boot. Add/remove keys in git, not on the box.
 if [ -f /etc/herdr-box/authorized_keys ]; then
