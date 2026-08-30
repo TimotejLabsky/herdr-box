@@ -92,6 +92,9 @@ RUN npm install -g --no-fund --no-audit \
 # ---------------------------------------------------------------------------
 RUN groupadd -g "${USER_GID}" "${USERNAME}" \
     && useradd -m -u "${USER_UID}" -g "${USER_GID}" -s /bin/bash "${USERNAME}" \
+    # useradd leaves the account LOCKED ('!' in /etc/shadow); sshd+PAM then
+    # refuses login even with a valid pubkey. '*' = unlocked, no password auth.
+    && usermod -p '*' "${USERNAME}" \
     && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-herdr-box \
     && chmod 0440 /etc/sudoers.d/90-herdr-box \
     && mkdir -p /run/sshd
